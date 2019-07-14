@@ -44,16 +44,19 @@ func (request *Request) cloneRealRequest() *gorequest.SuperAgent {
 	return request.proxy.Clone()
 }
 
-func (request *Request) Get(url string, result interface{}, retries ...int) []error {
+func (request *Request) Get(url string, queryData interface{}, result interface{}, retries ...int) []error {
 	retryTimes := 0
 	length := len(retries)
 	if length > 0 {
 		retryTimes = retries[0]
 	}
 	errs := []error{errors.New("unknown error")}
-	res := ""
+	var res string
 	req := request.cloneRealRequest()
 	req.Get(url)
+	if queryData != nil {
+		req.Query(queryData)
+	}
 	for i := 0; i < retryTimes+1; i++ {
 		switch result.(type) {
 		case *string:
@@ -82,11 +85,14 @@ func (request *Request) Post(contentType string, url string, data interface{}, r
 		retryTimes = retries[0]
 	}
 	errs := []error{errors.New("unknown error")}
-	res := ""
+	var res string
 	req := request.cloneRealRequest()
 	req.Type(contentType)
-	req.Post(url).Send(data)
+	req.Post(url)
 
+	if data != nil {
+		req.Send(data)
+	}
 	for i := 0; i < retryTimes+1; i++ {
 		switch result.(type) {
 		case *string:
