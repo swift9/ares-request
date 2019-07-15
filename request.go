@@ -114,10 +114,10 @@ func (request *Request) Post(contentType string, url string, data interface{}, r
 	return errs
 }
 
-func (request *Request) PostForm(url string, data interface{}, result *interface{}, retries ...int) []error {
-	return request.Post("form", url, data, result, retries...)
+func (request *Request) PostForm(url string, data interface{}, result interface{}, retries ...int) []error {
+	return request.Post("form", url, data, &result, retries...)
 }
 
-func (request *Request) PostJson(url string, data interface{}, result *interface{}, retries ...int) []error {
-	return request.Post("json", url, data, result, retries...)
+func (request *Request) PostJson(url string, data interface{}, result interface{}, retries ...int) []error {
+	return request.Post("json", url, data, &result, retries...)
 }
